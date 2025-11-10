@@ -1,0 +1,109 @@
+package next.gen.consulting.controller.request;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import next.gen.consulting.dto.request.CreateRequestDto;
+import next.gen.consulting.dto.request.RequestDto;
+import next.gen.consulting.dto.request.UpdateRequestDto;
+import next.gen.consulting.model.RequestStatus;
+import next.gen.consulting.service.CustomUserPrincipal;
+import next.gen.consulting.service.RequestService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/requests")
+@RequiredArgsConstructor
+public class RequestController {
+
+    private final RequestService requestService;
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN')")
+    public ResponseEntity<RequestDto> createRequest(
+            @AuthenticationPrincipal CustomUserPrincipal principal,
+            @Valid @RequestBody CreateRequestDto createRequest) {
+        RequestDto savedRequest = requestService.create(createRequest, principal.getId());
+        return ResponseEntity.ok(savedRequest);
+    }
+
+    @GetMapping("/my")
+    @PreAuthorize("hasAnyRole('CLIENT', 'CONSULTANT', 'ADMIN')")
+    public ResponseEntity<List<RequestDto>> getMyRequests(
+            @AuthenticationPrincipal CustomUserPrincipal principal,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        List<RequestDto> requests = requestService.getMyRequests(principal.getId(), PageRequest.of(page, size));
+        return ResponseEntity.ok(requests);
+    }
+
+    @GetMapping("/consultant")
+    @PreAuthorize("hasRole('CONSULTANT')")
+    public Page<RequestDto> getConsultantRequests(
+            @AuthenticationPrincipal CustomUserPrincipal principal,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return requestService.getConsultantRequests(principal.getId(), PageRequest.of(page, size));
+    }
+    
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<RequestDto>> getAllRequests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<RequestDto> requests = requestService.getAll(PageRequest.of(page, size));
+        return ResponseEntity.ok(requests);
+    }
+    
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('CLIENT', 'CONSULTANT', 'ADMIN')")
+    public ResponseEntity<RequestDto> getRequestById(@PathVariable UUID id) {
+        RequestDto request = requestService.getById(id);
+        return ResponseEntity.ok(request);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('CLIENT', 'CONSULTANT', 'ADMIN')")
+    public ResponseEntity<RequestDto> updateRequest(
+            @PathVariable UUID id,
+            @RequestBody UpdateRequestDto updateRequest) {
+        RequestDto updatedRequest = requestService.update(id, updateRequest);
+        return ResponseEntity.ok(updatedRequest);
+    }
+
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('CONSULTANT')")
+    public ResponseEntity<RequestDto> updateRequestStatus(
+            @PathVariable UUID id,
+            @RequestParam RequestStatus status,
+            @AuthenticationPrincipal CustomUserPrincipal principal,
+            @RequestParam(required = false) String comment) {
+        RequestDto updatedRequest = requestService.updateStatus(id, status, principal.getId(), comment);
+        return ResponseEntity.ok(updatedRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN')")
+    public ResponseEntity<String> deleteRequest(@PathVariable UUID id) {
+        requestService.delete(id);
+        return ResponseEntity.ok("Запрос удален");
+    }
+
+    @GetMapping("/{status}")
+    @PreAuthorize("hasAnyRole('CONSULTANT', 'ADMIN')")
+    public ResponseEntity<List<RequestDto>> getPendingRequests(
+            @PathVariable RequestStatus status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        List<RequestDto> requests = requestService.getByStatus(status, PageRequest.of(page, size));
+        return ResponseEntity.ok(requests);
+    }
+}
