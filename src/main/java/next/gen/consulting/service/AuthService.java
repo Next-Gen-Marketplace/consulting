@@ -7,7 +7,7 @@ import next.gen.consulting.dto.auth.LoginRequest;
 import next.gen.consulting.dto.auth.LoginResponse;
 import next.gen.consulting.dto.auth.RefreshTokenRequest;
 import next.gen.consulting.dto.auth.RefreshTokenResponse;
-import next.gen.consulting.exception.AuthenticationException;
+import next.gen.consulting.exception.auth.AuthenticationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

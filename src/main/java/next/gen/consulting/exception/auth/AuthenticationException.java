@@ -1,4 +1,4 @@
-package next.gen.consulting.exception;
+package next.gen.consulting.exception.auth;
 
 public class AuthenticationException extends RuntimeException {
     

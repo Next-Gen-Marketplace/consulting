@@ -6,7 +6,7 @@ import next.gen.consulting.dto.consultant.CreateConsultantDto;
 import next.gen.consulting.dto.consultant.UpdateConsultantDto;
 import next.gen.consulting.exception.BadRequestException;
 import next.gen.consulting.exception.ResourceNotFoundException;
-import next.gen.consulting.mapper.ConsultantMapper;
+import next.gen.consulting.mapper.consultant.ConsultantMapper;
 import next.gen.consulting.model.Consultant;
 import next.gen.consulting.model.User;
 import next.gen.consulting.model.UserRole;
@@ -65,6 +65,8 @@ public class ConsultantService {
         if (UserRole.CONSULTANT.equals(user.getRole())) {
             throw new BadRequestException("Пользователь уже является консультантом");
         }
+
+        user.setRole(UserRole.CONSULTANT);
 
         Consultant consultant = Consultant.builder()
                 .user(user)

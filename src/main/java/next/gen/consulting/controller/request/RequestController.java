@@ -36,11 +36,12 @@ public class RequestController {
 
     @GetMapping("/my")
     @PreAuthorize("hasAnyRole('CLIENT', 'CONSULTANT', 'ADMIN')")
-    public ResponseEntity<List<RequestDto>> getMyRequests(
+    public ResponseEntity<Page<RequestDto>> getMyRequests(
             @AuthenticationPrincipal CustomUserPrincipal principal,
+            @RequestParam(required = false) RequestStatus status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        List<RequestDto> requests = requestService.getMyRequests(principal.getId(), PageRequest.of(page, size));
+        Page<RequestDto> requests = requestService.getMyRequests(principal.getId(), PageRequest.of(page, size), status);
         return ResponseEntity.ok(requests);
     }
 
@@ -54,12 +55,13 @@ public class RequestController {
     }
     
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONSULTANT')")
     public ResponseEntity<Page<RequestDto>> getAllRequests(
+            @RequestParam(required = false) RequestStatus status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<RequestDto> requests = requestService.getAll(PageRequest.of(page, size));
+        Page<RequestDto> requests = requestService.getAll(PageRequest.of(page, size), status);
         return ResponseEntity.ok(requests);
     }
     
@@ -97,13 +99,13 @@ public class RequestController {
         return ResponseEntity.ok("Запрос удален");
     }
 
-    @GetMapping("/{status}")
+    @GetMapping("/status")
     @PreAuthorize("hasAnyRole('CONSULTANT', 'ADMIN')")
-    public ResponseEntity<List<RequestDto>> getPendingRequests(
-            @PathVariable RequestStatus status,
+    public ResponseEntity<Page<RequestDto>> getPendingRequests(
+            @RequestParam RequestStatus status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        List<RequestDto> requests = requestService.getByStatus(status, PageRequest.of(page, size));
+        Page<RequestDto> requests = requestService.getByStatus(status, PageRequest.of(page, size));
         return ResponseEntity.ok(requests);
     }
 }

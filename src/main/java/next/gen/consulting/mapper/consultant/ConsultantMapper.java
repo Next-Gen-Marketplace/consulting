@@ -1,4 +1,4 @@
-package next.gen.consulting.mapper;
+package next.gen.consulting.mapper.consultant;
 
 import next.gen.consulting.dto.consultant.ConsultantDto;
 import next.gen.consulting.model.Consultant;

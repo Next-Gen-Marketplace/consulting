@@ -1,4 +1,4 @@
-package next.gen.consulting.mapper;
+package next.gen.consulting.mapper.achievement;
 
 import next.gen.consulting.dto.achievement.AchievementDto;
 import next.gen.consulting.model.Achievement;

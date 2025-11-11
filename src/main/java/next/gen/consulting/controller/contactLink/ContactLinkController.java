@@ -33,9 +33,9 @@ public class ContactLinkController {
         return ResponseEntity.ok(contactLinkService.create(principal.getId(), createRequest));
     }
 
-    @GetMapping("/consultant/{consultantId}")
-    public ResponseEntity<List<ContactLinkDto>> getContactLinksByConsultant(@PathVariable UUID consultantId) {
-        return ResponseEntity.ok(contactLinkService.getByConsultantId(consultantId));
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ContactLinkDto>> getContactLinksByConsultant(@PathVariable UUID userId) {
+        return ResponseEntity.ok(contactLinkService.getByConsultantId(userId));
     }
 
     @GetMapping

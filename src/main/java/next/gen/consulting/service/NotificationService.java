@@ -3,7 +3,7 @@ package next.gen.consulting.service;
 import lombok.RequiredArgsConstructor;
 import next.gen.consulting.dto.notification.NotificationDto;
 import next.gen.consulting.exception.ResourceNotFoundException;
-import next.gen.consulting.mapper.NotificationMapper;
+import next.gen.consulting.mapper.notification.NotificationMapper;
 import next.gen.consulting.model.Notification;
 import next.gen.consulting.model.User;
 import next.gen.consulting.repository.NotificationRepository;

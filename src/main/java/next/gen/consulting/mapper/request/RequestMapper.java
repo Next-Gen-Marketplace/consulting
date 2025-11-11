@@ -1,4 +1,4 @@
-package next.gen.consulting.mapper;
+package next.gen.consulting.mapper.request;
 
 import next.gen.consulting.dto.request.RequestDto;
 import next.gen.consulting.model.Request;

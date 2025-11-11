@@ -29,13 +29,13 @@ public class RequestClientNotificationHandler extends AbstractRequestActionHandl
         switch (context.getActionType()) {
             case CREATED -> notifyClient(
                     request.getClientId(),
-                    "Ваша заявка \"" + request.getDescription().substring(0,10) + "...\" успешно создана и ожидает обработки."
+                    "Ваша заявка \"" + request.getDescription().substring(0,15) + "...\" успешно создана и ожидает обработки."
             );
             case STATUS_CHANGED -> {
                 RequestStatus newStatus = request.getStatus();
                 notifyClient(
                         request.getClientId(),
-                        "Статус вашей заявки \"" + request.getDescription().substring(0,10) + "...\" изменён на " + newStatus + "."
+                        "Статус вашей заявки \"" + request.getDescription().substring(0,15) + "...\" изменён на " + newStatus + "."
                 );
             }
             default -> {

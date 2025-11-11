@@ -1,4 +1,4 @@
-package next.gen.consulting.mapper;
+package next.gen.consulting.mapper.notification;
 
 import next.gen.consulting.dto.notification.NotificationDto;
 import next.gen.consulting.model.Notification;

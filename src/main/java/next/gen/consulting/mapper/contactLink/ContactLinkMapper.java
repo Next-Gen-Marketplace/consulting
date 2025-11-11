@@ -1,4 +1,4 @@
-package next.gen.consulting.mapper;
+package next.gen.consulting.mapper.contactLink;
 
 import next.gen.consulting.dto.contactLink.ContactLinkDto;
 import next.gen.consulting.model.ContactLink;

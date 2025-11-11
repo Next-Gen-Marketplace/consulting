@@ -6,7 +6,7 @@ import next.gen.consulting.dto.user.UserDto;
 import next.gen.consulting.dto.user.UserUpdateRequest;
 import next.gen.consulting.exception.BadRequestException;
 import next.gen.consulting.exception.ResourceNotFoundException;
-import next.gen.consulting.mapper.UserMapper;
+import next.gen.consulting.mapper.user.UserMapper;
 import next.gen.consulting.model.User;
 import next.gen.consulting.model.UserRole;
 import next.gen.consulting.repository.UserRepository;

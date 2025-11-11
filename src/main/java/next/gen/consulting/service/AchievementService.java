@@ -5,7 +5,7 @@ import next.gen.consulting.dto.achievement.AchievementDto;
 import next.gen.consulting.dto.achievement.CreateAchievementDto;
 import next.gen.consulting.dto.achievement.UpdateAchievementDto;
 import next.gen.consulting.exception.ResourceNotFoundException;
-import next.gen.consulting.mapper.AchievementMapper;
+import next.gen.consulting.mapper.achievement.AchievementMapper;
 import next.gen.consulting.model.Achievement;
 import next.gen.consulting.model.User;
 import next.gen.consulting.repository.AchievementRepository;

@@ -5,7 +5,7 @@ import next.gen.consulting.dto.request.CreateRequestDto;
 import next.gen.consulting.dto.request.RequestDto;
 import next.gen.consulting.dto.request.UpdateRequestDto;
 import next.gen.consulting.exception.ResourceNotFoundException;
-import next.gen.consulting.mapper.RequestMapper;
+import next.gen.consulting.mapper.request.RequestMapper;
 import next.gen.consulting.model.Consultant;
 import next.gen.consulting.model.Request;
 import next.gen.consulting.model.RequestStatus;
@@ -41,15 +41,14 @@ public class RequestService {
         return requestMapper.toDto(request);
     }
 
-    public Page<RequestDto> getAll(Pageable pageable) {
-        return requestRepository.findAll(pageable)
+    public Page<RequestDto> getAll(Pageable pageable, RequestStatus status) {
+        return requestRepository.findByStatusNull(status, pageable)
                 .map(requestMapper::toDto);
     }
 
-    public List<RequestDto> getByClientId(UUID clientId, Pageable pageable) {
-        return requestRepository.findByClientId(clientId, pageable).stream()
-                .map(requestMapper::toDto)
-                .toList();
+    public Page<RequestDto> getByClientId(UUID clientId, Pageable pageable, RequestStatus status) {
+        return requestRepository.findByClientIdAndStatusNullable(clientId, status, pageable)
+                .map(requestMapper::toDto);
     }
 
     public Page<RequestDto> getConsultantRequests(UUID userId, Pageable pageable) {
@@ -57,10 +56,9 @@ public class RequestService {
                 .map(requestMapper::toDto);
     }
 
-    public List<RequestDto> getByStatus(RequestStatus status, Pageable pageable) {
-        return requestRepository.findByStatus(status, pageable).stream()
-                .map(requestMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<RequestDto> getByStatus(RequestStatus status, Pageable pageable) {
+        return requestRepository.findByStatus(status, pageable)
+                .map(requestMapper::toDto);
     }
 
     @Transactional
@@ -122,10 +120,10 @@ public class RequestService {
         return dto;
     }
 
-    public List<RequestDto> getMyRequests(UUID id, Pageable pageable) {
+    public Page<RequestDto> getMyRequests(UUID id, Pageable pageable, RequestStatus status) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
-        return getByClientId(user.getId(), pageable);
+        return getByClientId(user.getId(), pageable, status);
     }
 
     @Transactional
@@ -135,7 +133,7 @@ public class RequestService {
         request.setStatus(status);
 
         if (consultantId != null) {
-            Consultant consultant = consultantRepository.findById(consultantId)
+            Consultant consultant = consultantRepository.findByUserId(consultantId)
                     .orElseThrow(() -> new ResourceNotFoundException("Consultant", "id", consultantId));
             request.setConsultant(consultant);
         }

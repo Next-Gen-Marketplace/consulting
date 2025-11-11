@@ -5,7 +5,7 @@ import next.gen.consulting.dto.contactLink.ContactLinkDto;
 import next.gen.consulting.dto.contactLink.CreateContactLinkDto;
 import next.gen.consulting.dto.contactLink.UpdateContactLinkDto;
 import next.gen.consulting.exception.ResourceNotFoundException;
-import next.gen.consulting.mapper.ContactLinkMapper;
+import next.gen.consulting.mapper.contactLink.ContactLinkMapper;
 import next.gen.consulting.model.Consultant;
 import next.gen.consulting.model.ContactLink;
 import next.gen.consulting.repository.ConsultantRepository;
@@ -33,7 +33,7 @@ public class ContactLinkService {
     }
 
     public List<ContactLinkDto> getByConsultantId(UUID consultantId) {
-        return contactLinkRepository.findByConsultantId(consultantId).stream()
+        return contactLinkRepository.findByUserId(consultantId).stream()
                 .map(contactLinkMapper::toDto)
                 .toList();
     }
@@ -45,7 +45,7 @@ public class ContactLinkService {
 
     @Transactional
     public ContactLinkDto create(UUID id, CreateContactLinkDto contactLinkDto) {
-        Consultant consultant = consultantRepository.findById(id)
+        Consultant consultant = consultantRepository.findByUserId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consultant", "id", id));
 
         ContactLink contactLink = ContactLink.builder()
